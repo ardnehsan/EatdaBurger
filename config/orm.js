@@ -1,21 +1,27 @@
-var orm = require('../config/omr.js');
+var connection = require('./connection.js');
 
-var burger = {
-        all:function(cb) {
-            orm.all('burgers', function (res){
-            cb(res);
+var orm = {
+        all:function(tableInput, cb) {
+            connection.query('SELECT * FROM ' + tableInput + ';', function(err,res)
+            {
+                if(err) throw err;
+                 cb(res);
             });
         },
-        create:function(cols, vals, cb) {
-            orm.create('burgers', cols, vals, function (res){
-            cb(res);
+        update:function(tableInput, condition, cb) {
+            connection.query('UPDATE ' + tableInput + ' SET devoured=true WHERE id='+condition+';', function(err,res)
+            {
+                if(err) throw err;
+                 cb(res);
             });
         },
-        update:function(objColVals, condition, cb) {
-            orm.update('burgers', objColVals, condition, function (res){
-            cb(res);
+        create:function(tableInput, val, cb) {
+            connection.query('INSERT INTO ' + tableInput + " (burger_name) VALUES ('"+val+"');", function(err,res)
+            {
+                if(err) throw err;
+                 cb(res);
             });
         }
 };
 
-module.exports = burger;
+module.exports = orm;
